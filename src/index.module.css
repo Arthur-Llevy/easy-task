@@ -61,3 +61,7 @@
     flex-direction: column;
     gap: 12px;
 }
+
+.tasks {
+    padding: 10px 0;
+}

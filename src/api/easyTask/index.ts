@@ -1,4 +1,6 @@
-async function getAllTaks () {
+import type { TaskType } from "../../types/taskType";
+
+async function getAllTaks (): Promise<TaskType[]> {
     return fetch("http://localhost:8080/api/tasks", {
         method: "GET",
         headers: {
@@ -9,7 +11,7 @@ async function getAllTaks () {
     .then(data => data);
 }
 
-async function createTask(title: string, completed: boolean) {
+async function createTask(title: string, completed: boolean): Promise<TaskType> {
     return fetch("http://localhost:8080/api/tasks", {
         method: "POST",
         headers: {
@@ -24,15 +26,45 @@ async function createTask(title: string, completed: boolean) {
     .then(data => data);
 }
 
-async function deleteTask(id: number) {
-    return fetch(`http://localhost:8080/api/tasks/${id}`, {
+async function deleteTask(id: number): Promise<void> {
+    fetch(`http://localhost:8080/api/tasks/${id}`, {
         method: "DELETE",
         headers: {
             "Content-Type": "application/json"
         }
     })
     .then(response => response.json())
+    .then(data => data)
+}
+
+async function updateCompletedState(id: number, state: boolean): Promise<TaskType> {
+    return fetch(`http://localhost:8080/api/tasks/${id}`, {
+        method: "PUT",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+            title: "",
+            completed: state
+        })
+    })
+    .then(response => response.json())
     .then(data => data);
 }
 
-export { getAllTaks, createTask, deleteTask };
+async function updateTitle(id: number, title: string): Promise<TaskType> {
+    return fetch(`http://localhost:8080/api/tasks/${id}`, {
+        method: "PUT",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+            title: title,
+            completed: ""
+        })
+    })
+    .then(response => response.json())
+    .then(data => data);
+}
+
+export { getAllTaks, createTask, deleteTask, updateCompletedState, updateTitle };

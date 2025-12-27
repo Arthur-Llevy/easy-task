@@ -1,27 +1,46 @@
-import { deleteTask } from "../../api/easyTask"
+import { deleteTask, updateCompletedState, updateTitle } from "../../api/easyTask"
+import type { TaskType } from "../../types/taskType";
 import styles from "./index.module.css"
 
-type TaskCardProps = {
-    title: string,
-    completed: boolean,
-    id: number
-}
-
-export function TaskCard({ title, completed, id }: TaskCardProps) {
+export function TaskCard({ title, completed, id }: TaskType) {
     async function handleDelteTask() {
-        await deleteTask(id);
-        // window.location.reload()
+        try {
+            await deleteTask(id)
+            .then(() => window.location.reload())
+        } catch (error: Error | unknown) {
+            throw new Error("Error on deleting fetch")
+        }
+    }
+
+    async function changeState(state: boolean) {
+        await updateCompletedState(id, state);
+        window.location.reload();
+    }
+
+    async function changeTitle() {
+        let newTitle = window.prompt("Digite o novo título: ");
+
+        if (newTitle !== null && newTitle !== "" && newTitle !== undefined) {
+            await updateTitle(id, newTitle);
+            window.location.reload();
+        } else {
+            window.alert("Digite um título válido.")
+        }
     }
 
     return (
         <div className={styles.container}>
             <div className={styles.data}>
-                <input type="checkbox" checked={completed} />
+                <input 
+                    type="checkbox"
+                    checked={completed} 
+                    onChange={event => changeState(event.target.checked)}
+                />
                 <p>{title}</p>
             </div>
 
             <div className={styles.buttons}>
-                <button>
+                <button onClick={changeTitle}>
                     <img src="/edit-icon.svg" />
                 </button>
                 <button onClick={handleDelteTask}>

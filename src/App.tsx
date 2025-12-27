@@ -2,15 +2,22 @@ import { createTask, getAllTaks } from "./api/easyTask";
 import { TaskCard } from "./components/taskCard/TaskCard"
 import styles from "./index.module.css"
 import { useEffect, useState } from "react";
+import type { TaskType } from "./types/taskType";
 
 function App() {
-  const [allTasks, setAllTasks] = useState([]);
+  const [allTasks, setAllTasks] = useState<TaskType[]>([]);
   const [taskTitle, setTaskTitle] = useState("");
+  const [uncompletedTasksNumber, setUncompletedTasks] = useState<number>(0);
+
+  function filterUncompletedTasks(tasks: TaskType[]): void {
+    let uncompletedTasks = tasks.filter(task => task.completed === false);
+    setUncompletedTasks(uncompletedTasks.length);
+  }
 
   async function handleGetAllTasks () {
     try {
       let tasks = await getAllTaks();
-      console.log(tasks)
+      filterUncompletedTasks(tasks);
       setAllTasks(tasks);
     } catch (ex: Error | unknown) {
       throw new Error("Tasks not found")
@@ -18,7 +25,7 @@ function App() {
   }
 
   async function handleCreateTask() {
-    let taskCreated = await createTask(taskTitle, false);
+    await createTask(taskTitle, false);
     window.location.reload();
   }
 
@@ -43,7 +50,8 @@ function App() {
         </div>
         {allTasks !== undefined && allTasks.length > 0 && allTasks.map(task => (
           <div
-              key={task.id}
+            className={styles.tasks}
+            key={task.id}
           >
             <TaskCard 
               id={task.id}
@@ -52,7 +60,7 @@ function App() {
             />
           </div>
         ))}
-        <span className={styles.span}>Há 5 tarefas pendentes</span>
+        <span className={styles.span}>Há {uncompletedTasksNumber} tarefas pendentes</span>
       </div>
     </main>
   )
