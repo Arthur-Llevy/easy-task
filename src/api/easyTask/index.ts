@@ -1,7 +1,9 @@
 import type { TaskType } from "../../types/taskType";
 
+const API_URL = import.meta.env.VITE_API_URL;
+
 async function getAllTaks (): Promise<TaskType[]> {
-    return fetch("http://localhost:8080/api/tasks", {
+    return fetch(API_URL, {
         method: "GET",
         headers: {
             "Content-Type": "application/json"
@@ -12,7 +14,7 @@ async function getAllTaks (): Promise<TaskType[]> {
 }
 
 async function createTask(title: string, completed: boolean): Promise<TaskType> {
-    return fetch("http://localhost:8080/api/tasks", {
+    return fetch(API_URL, {
         method: "POST",
         headers: {
             "Content-Type": "application/json"
@@ -27,7 +29,7 @@ async function createTask(title: string, completed: boolean): Promise<TaskType> 
 }
 
 async function deleteTask(id: number): Promise<void> {
-    fetch(`http://localhost:8080/api/tasks/${id}`, {
+    fetch(`${API_URL}/${id}`, {
         method: "DELETE",
         headers: {
             "Content-Type": "application/json"
@@ -38,7 +40,7 @@ async function deleteTask(id: number): Promise<void> {
 }
 
 async function updateCompletedState(id: number, state: boolean): Promise<TaskType> {
-    return fetch(`http://localhost:8080/api/tasks/${id}`, {
+    return fetch(`${API_URL}/${id}`, {
         method: "PUT",
         headers: {
             "Content-Type": "application/json"
@@ -53,7 +55,7 @@ async function updateCompletedState(id: number, state: boolean): Promise<TaskTyp
 }
 
 async function updateTitle(id: number, title: string): Promise<TaskType> {
-    return fetch(`http://localhost:8080/api/tasks/${id}`, {
+    return fetch(`${API_URL}/${id}`, {
         method: "PUT",
         headers: {
             "Content-Type": "application/json"

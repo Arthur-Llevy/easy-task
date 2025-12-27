@@ -6,7 +6,6 @@ export function TaskCard({ title, completed, id }: TaskType) {
     async function handleDelteTask() {
         try {
             await deleteTask(id)
-            .then(() => window.location.reload())
         } catch (error: Error | unknown) {
             throw new Error("Error on deleting fetch")
         }
